@@ -26,14 +26,6 @@ public class Main {
 					throws ServletException, IOException {
 				final int c = count.incrementAndGet();
 				final ObjectMapper mapper = new ObjectMapper();
-				class Count {
-					@SuppressWarnings("unused")
-					public final int count;
-
-					public Count(final int count) {
-						this.count = count;
-					}
-				}
 				response.setContentType("application/json");
 				mapper.writeValue(response.getOutputStream(), new Count(c));
 			}
@@ -41,5 +33,13 @@ public class Main {
 		server.setHandler(handler);
 		server.start();
 		server.join();
+	}
+
+	static class Count {
+		public final int count;
+
+		public Count(final int count) {
+			this.count = count;
+		}
 	}
 }
