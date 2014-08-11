@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -9,8 +10,11 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class Main {
 	public static void main(final String[] args) throws Exception {
+		final AtomicInteger count = new AtomicInteger();
 		final Server server = new Server(8080);
 		final ServletContextHandler handler = new ServletContextHandler(
 				ServletContextHandler.SESSIONS);
@@ -20,11 +24,20 @@ public class Main {
 			protected void doGet(final HttpServletRequest request,
 					final HttpServletResponse response)
 					throws ServletException, IOException {
-				response.setCharacterEncoding("UTF-8");
-				response.setContentType("text/plain");
-				response.getWriter().println("こんにちは！");
+				final int c = count.incrementAndGet();
+				final ObjectMapper mapper = new ObjectMapper();
+				class Count {
+					@SuppressWarnings("unused")
+					public final int count;
+
+					public Count(final int count) {
+						this.count = count;
+					}
+				}
+				response.setContentType("application/json");
+				mapper.writeValue(response.getOutputStream(), new Count(c));
 			}
-		}), "/hello");
+		}), "/mill");
 		server.setHandler(handler);
 		server.start();
 		server.join();
