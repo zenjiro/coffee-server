@@ -24,10 +24,9 @@ public class Main {
 			protected void doGet(final HttpServletRequest request,
 					final HttpServletResponse response)
 					throws ServletException, IOException {
-				final int c = count.incrementAndGet();
-				final ObjectMapper mapper = new ObjectMapper();
 				response.setContentType("application/json");
-				mapper.writeValue(response.getOutputStream(), new Count(c));
+				new ObjectMapper().writeValue(response.getOutputStream(),
+						new Count(count.incrementAndGet()));
 			}
 		}), "/mill");
 		server.setHandler(handler);
