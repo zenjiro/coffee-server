@@ -5,4 +5,11 @@
 	<artifactId>coffee-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Coffee Server</name>
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>9.1.3.v20140225</version>
+		</dependency>
+	</dependencies>
 </project>
