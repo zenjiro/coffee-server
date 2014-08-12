@@ -1,7 +1,5 @@
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -44,6 +42,13 @@ public class Main {
 								count.get(),
 								new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ")
 										.format(resetTimeMillis.get()) });
+			}
+
+			@Override
+			protected void doPost(HttpServletRequest request,
+					HttpServletResponse response) throws ServletException,
+					IOException {
+				doGet(request, response);
 			}
 		}), "/mill");
 		server.setHandler(handler);
