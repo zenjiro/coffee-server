@@ -42,7 +42,7 @@ public class Main {
 						"count = {0}, resetTime = {1}",
 						new Object[] {
 								count.get(),
-								new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+								new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ")
 										.format(resetTimeMillis.get()) });
 			}
 		}), "/mill");
