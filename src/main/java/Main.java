@@ -13,12 +13,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Main {
+	static class Count {
+		public final int count;
+
+		public Count(final int count) {
+			this.count = count;
+		}
+	}
+
 	public static void main(final String[] args) throws Exception {
 		final AtomicInteger count = new AtomicInteger();
 		final AtomicLong resetTimeMillis = new AtomicLong(Long.MAX_VALUE);
@@ -45,23 +54,25 @@ public class Main {
 			}
 
 			@Override
-			protected void doPost(HttpServletRequest request,
-					HttpServletResponse response) throws ServletException,
-					IOException {
+			protected void doPost(final HttpServletRequest request,
+					final HttpServletResponse response)
+					throws ServletException, IOException {
 				doGet(request, response);
 			}
 		}), "/mill");
 		handler.addServlet(new ServletHolder(new HttpServlet() {
 			@Override
-			protected void doGet(HttpServletRequest request,
-					HttpServletResponse response) throws ServletException,
-					IOException {
+			protected void doGet(final HttpServletRequest request,
+					final HttpServletResponse response)
+					throws ServletException, IOException {
 				response.setContentType("application/json");
 				new ObjectMapper().writeValue(response.getOutputStream(),
 						new Count(count.get()));
 			}
 		}), "/status");
-		server.setHandler(handler);
+		final HandlerList handlers = new HandlerList();
+		handlers.addHandler(handler);
+		server.setHandler(handlers);
 		server.start();
 		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(
 				() -> {
@@ -71,13 +82,5 @@ public class Main {
 						Logger.getAnonymousLogger().info("カウンタをリセットしました。");
 					}
 				}, 1, 1, TimeUnit.SECONDS);
-	}
-
-	static class Count {
-		public final int count;
-
-		public Count(final int count) {
-			this.count = count;
-		}
 	}
 }
