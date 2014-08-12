@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>zenjiro</groupId>
 	<artifactId>coffee-server</artifactId>
-	<version>0.3.0</version>
+	<version>1.0.0</version>
 	<name>Coffee Server</name>
 	<build>
 		<plugins>
@@ -14,6 +14,7 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 			<plugin>
