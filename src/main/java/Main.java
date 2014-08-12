@@ -1,7 +1,5 @@
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -45,7 +43,24 @@ public class Main {
 								new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ")
 										.format(resetTimeMillis.get()) });
 			}
+
+			@Override
+			protected void doPost(HttpServletRequest request,
+					HttpServletResponse response) throws ServletException,
+					IOException {
+				doGet(request, response);
+			}
 		}), "/mill");
+		handler.addServlet(new ServletHolder(new HttpServlet() {
+			@Override
+			protected void doGet(HttpServletRequest request,
+					HttpServletResponse response) throws ServletException,
+					IOException {
+				response.setContentType("application/json");
+				new ObjectMapper().writeValue(response.getOutputStream(),
+						new Count(count.get()));
+			}
+		}), "/status");
 		server.setHandler(handler);
 		server.start();
 		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(
