@@ -1,7 +1,13 @@
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -31,11 +37,25 @@ public class Main {
 				new ObjectMapper().writeValue(response.getOutputStream(),
 						new Count(count.incrementAndGet()));
 				resetTimeMillis.set(System.currentTimeMillis() + 10_000);
+				Logger.getAnonymousLogger().log(
+						Level.INFO,
+						"count = {0}, resetTime = {1}",
+						new Object[] {
+								count.get(),
+								new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+										.format(resetTimeMillis.get()) });
 			}
 		}), "/mill");
 		server.setHandler(handler);
 		server.start();
-		server.join();
+		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(
+				() -> {
+					if (System.currentTimeMillis() > resetTimeMillis.get()) {
+						count.set(0);
+						resetTimeMillis.set(Long.MAX_VALUE);
+						Logger.getAnonymousLogger().info("カウンタをリセットしました。");
+					}
+				}, 1, 1, TimeUnit.SECONDS);
 	}
 
 	static class Count {
