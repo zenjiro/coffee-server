@@ -51,6 +51,16 @@ public class Main {
 				doGet(request, response);
 			}
 		}), "/mill");
+		handler.addServlet(new ServletHolder(new HttpServlet() {
+			@Override
+			protected void doGet(HttpServletRequest request,
+					HttpServletResponse response) throws ServletException,
+					IOException {
+				response.setContentType("application/json");
+				new ObjectMapper().writeValue(response.getOutputStream(),
+						new Count(count.get()));
+			}
+		}), "/status");
 		server.setHandler(handler);
 		server.start();
 		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(
