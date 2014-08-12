@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
@@ -32,6 +34,15 @@ public class Main {
 		final AtomicInteger count = new AtomicInteger();
 		final AtomicLong resetTimeMillis = new AtomicLong(Long.MAX_VALUE);
 		final Server server = new Server(8080);
+		final HandlerList handlers = new HandlerList();
+		final ContextHandler contextHandler = new ContextHandler();
+		contextHandler.setContextPath("/webapp");
+		final ResourceHandler resourceHandler = new ResourceHandler();
+		resourceHandler.setDirectoriesListed(true);
+		resourceHandler.setWelcomeFiles(new String[] { "index.html" });
+		resourceHandler.setResourceBase("webapp");
+		contextHandler.setHandler(resourceHandler);
+		handlers.addHandler(contextHandler);
 		final ServletContextHandler handler = new ServletContextHandler(
 				ServletContextHandler.SESSIONS);
 		handler.setContextPath("/");
@@ -70,7 +81,6 @@ public class Main {
 						new Count(count.get()));
 			}
 		}), "/status");
-		final HandlerList handlers = new HandlerList();
 		handlers.addHandler(handler);
 		server.setHandler(handlers);
 		server.start();
