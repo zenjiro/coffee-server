@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -68,7 +69,7 @@ public class Main {
 			protected void doPost(final HttpServletRequest request,
 					final HttpServletResponse response)
 					throws ServletException, IOException {
-				doGet(request, response);
+				this.doGet(request, response);
 			}
 		}), "/mill");
 		handler.addServlet(new ServletHolder(new HttpServlet() {
@@ -84,13 +85,26 @@ public class Main {
 		handlers.addHandler(handler);
 		server.setHandler(handlers);
 		server.start();
-		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(
-				() -> {
-					if (System.currentTimeMillis() > resetTimeMillis.get()) {
-						count.set(0);
-						resetTimeMillis.set(Long.MAX_VALUE);
-						Logger.getAnonymousLogger().info("カウンタをリセットしました。");
-					}
-				}, 1, 1, TimeUnit.SECONDS);
+		final ScheduledExecutorService resetExecutorService = Executors
+				.newSingleThreadScheduledExecutor();
+		resetExecutorService.scheduleAtFixedRate(() -> {
+			if (System.currentTimeMillis() > resetTimeMillis.get()) {
+				count.set(0);
+				resetTimeMillis.set(Long.MAX_VALUE);
+				Logger.getAnonymousLogger().info("カウンタをリセットしました。");
+			}
+		}, 1, 1, TimeUnit.SECONDS);
+		View.closeHandler = new Runnable() {
+			@Override
+			public void run() {
+				resetExecutorService.shutdown();
+				try {
+					server.stop();
+				} catch (final Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		View.main(args);
 	}
 }

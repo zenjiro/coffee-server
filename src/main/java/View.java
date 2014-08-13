@@ -23,9 +23,9 @@ public class View extends Application {
 		Application.launch(args);
 	}
 
-	Runnable countUpHandler;
-	Runnable resetHandler;
-	Runnable closeHandler;
+	static Runnable countUpHandler;
+	static Runnable resetHandler;
+	static Runnable closeHandler;
 
 	@Override
 	public void start(final Stage stage) throws Exception {
@@ -83,13 +83,13 @@ public class View extends Application {
 			public void handle(final KeyEvent event) {
 				switch (event.getCode()) {
 				case ENTER:
-					if (View.this.countUpHandler != null) {
-						View.this.countUpHandler.run();
+					if (View.countUpHandler != null) {
+						View.countUpHandler.run();
 					}
 					break;
 				case ESCAPE:
-					if (View.this.resetHandler != null) {
-						View.this.resetHandler.run();
+					if (View.resetHandler != null) {
+						View.resetHandler.run();
 					}
 					break;
 				}
@@ -101,13 +101,13 @@ public class View extends Application {
 			public void handle(final MouseEvent event) {
 				switch (event.getButton()) {
 				case PRIMARY:
-					if (View.this.countUpHandler != null) {
-						View.this.countUpHandler.run();
+					if (View.countUpHandler != null) {
+						View.countUpHandler.run();
 					}
 					break;
 				case SECONDARY:
-					if (View.this.resetHandler != null) {
-						View.this.resetHandler.run();
+					if (View.resetHandler != null) {
+						View.resetHandler.run();
 					}
 					break;
 				}
@@ -118,8 +118,8 @@ public class View extends Application {
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
 			public void handle(final WindowEvent event) {
-				if (View.this.closeHandler != null) {
-					View.this.closeHandler.run();
+				if (View.closeHandler != null) {
+					View.closeHandler.run();
 				}
 			}
 		});
