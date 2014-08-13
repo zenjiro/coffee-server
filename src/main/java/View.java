@@ -37,8 +37,8 @@ public class View extends Application {
 		rootPane.setPadding(new Insets(20));
 		rootPane.setEffect(new Glow(1));
 		final Label usageLabel = new Label(
-				"Enter・左クリック：カウントアップ\nEsc・右クリック：リセット");
-		usageLabel.setFont(Font.font("Meiryo", 20));
+				"Enter・左クリック：カウントアップ　Esc・右クリック：リセット");
+		usageLabel.setFont(Font.font("Meiryo", 15));
 		usageLabel.setStyle("-fx-text-fill: Gray");
 		usageLabel.setTextAlignment(TextAlignment.CENTER);
 		usageLabel.setFocusTraversable(false);
@@ -72,7 +72,7 @@ public class View extends Application {
 		rootPane.add(anchorPane, 0, 1);
 		GridPane.setVgrow(anchorPane, Priority.ALWAYS);
 		GridPane.setHgrow(anchorPane, Priority.ALWAYS);
-		View.resetLabel = new Label("0");
+		View.resetLabel = new Label("-");
 		View.resetLabel.setFont(Font.font("Meiryo", 40));
 		View.resetLabel.setStyle("-fx-text-fill: White");
 		View.resetLabel.setFocusTraversable(false);
