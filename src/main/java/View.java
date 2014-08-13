@@ -22,6 +22,9 @@ public class View extends Application {
 		Application.launch(args);
 	}
 
+	Runnable countUpHandler;
+	Runnable resetHandler;
+
 	@Override
 	public void start(final Stage stage) throws Exception {
 		stage.setTitle("Coffee Server");
@@ -78,10 +81,14 @@ public class View extends Application {
 			public void handle(final KeyEvent event) {
 				switch (event.getCode()) {
 				case ENTER:
-					System.out.println("エンター");
+					if (countUpHandler != null) {
+						countUpHandler.run();
+					}
 					break;
 				case ESCAPE:
-					System.out.println("エスケイプ");
+					if (resetHandler != null) {
+						resetHandler.run();
+					}
 					break;
 				}
 			}
@@ -89,13 +96,17 @@ public class View extends Application {
 		scene.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@SuppressWarnings("incomplete-switch")
 			@Override
-			public void handle(MouseEvent event) {
+			public void handle(final MouseEvent event) {
 				switch (event.getButton()) {
 				case PRIMARY:
-					System.out.println("左クリック");
+					if (countUpHandler != null) {
+						countUpHandler.run();
+					}
 					break;
 				case SECONDARY:
-					System.out.println("右クリック");
+					if (resetHandler != null) {
+						resetHandler.run();
+					}
 					break;
 				}
 			}
