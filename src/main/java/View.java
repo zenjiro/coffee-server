@@ -1,11 +1,14 @@
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Glow;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -31,13 +34,15 @@ public class View extends Application {
 		usageLabel.setFont(Font.font("Meiryo", 20));
 		usageLabel.setStyle("-fx-text-fill: Gray");
 		usageLabel.setTextAlignment(TextAlignment.CENTER);
-		VBox b = new VBox(usageLabel);
+		usageLabel.setFocusTraversable(false);
+		final VBox b = new VBox(usageLabel);
 		b.setAlignment(Pos.CENTER);
 		rootPane.add(b, 0, 0);
 		final Label countLabel = new Label("0");
 		countLabel.setFont(Font.font("Meiryo", 80));
 		countLabel.setStyle("-fx-text-fill: White");
 		countLabel.setAlignment(Pos.CENTER);
+		countLabel.setFocusTraversable(false);
 		countLabel.heightProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(final ObservableValue<? extends Number> value,
@@ -62,10 +67,39 @@ public class View extends Application {
 		final Label resetLabel = new Label("0");
 		resetLabel.setFont(Font.font("Meiryo", 40));
 		resetLabel.setStyle("-fx-text-fill: White");
-		VBox h = new VBox(resetLabel);
+		resetLabel.setFocusTraversable(false);
+		final VBox h = new VBox(resetLabel);
 		h.setAlignment(Pos.BASELINE_RIGHT);
 		rootPane.add(h, 0, 2);
 		final Scene scene = new Scene(rootPane);
+		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@SuppressWarnings("incomplete-switch")
+			@Override
+			public void handle(final KeyEvent event) {
+				switch (event.getCode()) {
+				case ENTER:
+					System.out.println("エンター");
+					break;
+				case ESCAPE:
+					System.out.println("エスケイプ");
+					break;
+				}
+			}
+		});
+		scene.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@SuppressWarnings("incomplete-switch")
+			@Override
+			public void handle(MouseEvent event) {
+				switch (event.getButton()) {
+				case PRIMARY:
+					System.out.println("左クリック");
+					break;
+				case SECONDARY:
+					System.out.println("右クリック");
+					break;
+				}
+			}
+		});
 		stage.setScene(scene);
 		stage.show();
 	}
