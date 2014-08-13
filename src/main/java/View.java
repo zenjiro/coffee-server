@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class View extends Application {
 	public static void main(final String[] args) {
@@ -24,6 +25,7 @@ public class View extends Application {
 
 	Runnable countUpHandler;
 	Runnable resetHandler;
+	Runnable closeHandler;
 
 	@Override
 	public void start(final Stage stage) throws Exception {
@@ -81,13 +83,13 @@ public class View extends Application {
 			public void handle(final KeyEvent event) {
 				switch (event.getCode()) {
 				case ENTER:
-					if (countUpHandler != null) {
-						countUpHandler.run();
+					if (View.this.countUpHandler != null) {
+						View.this.countUpHandler.run();
 					}
 					break;
 				case ESCAPE:
-					if (resetHandler != null) {
-						resetHandler.run();
+					if (View.this.resetHandler != null) {
+						View.this.resetHandler.run();
 					}
 					break;
 				}
@@ -99,13 +101,13 @@ public class View extends Application {
 			public void handle(final MouseEvent event) {
 				switch (event.getButton()) {
 				case PRIMARY:
-					if (countUpHandler != null) {
-						countUpHandler.run();
+					if (View.this.countUpHandler != null) {
+						View.this.countUpHandler.run();
 					}
 					break;
 				case SECONDARY:
-					if (resetHandler != null) {
-						resetHandler.run();
+					if (View.this.resetHandler != null) {
+						View.this.resetHandler.run();
 					}
 					break;
 				}
@@ -113,5 +115,13 @@ public class View extends Application {
 		});
 		stage.setScene(scene);
 		stage.show();
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			@Override
+			public void handle(final WindowEvent event) {
+				if (View.this.closeHandler != null) {
+					View.this.closeHandler.run();
+				}
+			}
+		});
 	}
 }
