@@ -94,6 +94,22 @@ public class Main {
 				Logger.getAnonymousLogger().info("カウンタをリセットしました。");
 			}
 		}, 1, 1, TimeUnit.SECONDS);
+		View.countUpHandler = () -> {
+			count.incrementAndGet();
+			resetTimeMillis.set(System.currentTimeMillis() + 10_000);
+			Logger.getAnonymousLogger().log(
+					Level.INFO,
+					"count = {0}, resetTime = {1}",
+					new Object[] {
+							count.get(),
+							new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ")
+									.format(resetTimeMillis.get()) });
+		};
+		View.resetHandler = () -> {
+			count.set(0);
+			resetTimeMillis.set(Long.MAX_VALUE);
+			Logger.getAnonymousLogger().info("カウンタをリセットしました。");
+		};
 		View.closeHandler = () -> {
 			resetExecutorService.shutdown();
 			try {
