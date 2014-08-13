@@ -36,8 +36,7 @@ public class View extends Application {
 		rootPane.setStyle("-fx-background-color: Black");
 		rootPane.setPadding(new Insets(20));
 		rootPane.setEffect(new Glow(1));
-		final Label usageLabel = new Label(
-				"Enter・左クリック：カウントアップ　Esc・右クリック：リセット");
+		final Label usageLabel = new Label("Enter・左クリック：カウントアップ　Esc・右クリック：リセット");
 		usageLabel.setFont(Font.font("Meiryo", 15));
 		usageLabel.setStyle("-fx-text-fill: Gray");
 		usageLabel.setTextAlignment(TextAlignment.CENTER);
@@ -50,20 +49,6 @@ public class View extends Application {
 		View.countLabel.setStyle("-fx-text-fill: White");
 		View.countLabel.setAlignment(Pos.CENTER);
 		View.countLabel.setFocusTraversable(false);
-		View.countLabel.heightProperty().addListener(
-				new ChangeListener<Number>() {
-					@Override
-					public void changed(
-							final ObservableValue<? extends Number> value,
-							final Number oldHeight, final Number newHeight) {
-						if (oldHeight.doubleValue() > 0) {
-							View.countLabel.setFont(Font.font("Meiryo",
-									View.countLabel.getFont().getSize()
-											* newHeight.doubleValue()
-											/ oldHeight.doubleValue()));
-						}
-					}
-				});
 		final AnchorPane anchorPane = new AnchorPane(View.countLabel);
 		AnchorPane.setTopAnchor(View.countLabel, 0d);
 		AnchorPane.setLeftAnchor(View.countLabel, 0d);
@@ -80,6 +65,16 @@ public class View extends Application {
 		h.setAlignment(Pos.BASELINE_RIGHT);
 		rootPane.add(h, 0, 2);
 		final Scene scene = new Scene(rootPane);
+		scene.heightProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(final ObservableValue<? extends Number> value,
+					final Number oldHeight, final Number newHeight) {
+				View.countLabel.setFont(Font.font(
+						"Meiryo",
+						(rootPane.getHeight() - 80 - usageLabel.getHeight() - resetLabel
+								.getHeight()) * .6));
+			}
+		});
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@SuppressWarnings("incomplete-switch")
 			@Override
