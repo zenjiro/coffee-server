@@ -94,15 +94,12 @@ public class Main {
 				Logger.getAnonymousLogger().info("カウンタをリセットしました。");
 			}
 		}, 1, 1, TimeUnit.SECONDS);
-		View.closeHandler = new Runnable() {
-			@Override
-			public void run() {
-				resetExecutorService.shutdown();
-				try {
-					server.stop();
-				} catch (final Exception e) {
-					e.printStackTrace();
-				}
+		View.closeHandler = () -> {
+			resetExecutorService.shutdown();
+			try {
+				server.stop();
+			} catch (final Exception exception) {
+				exception.printStackTrace();
 			}
 		};
 		View.main(args);
