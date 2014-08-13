@@ -1,14 +1,9 @@
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Glow;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -16,7 +11,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 public class View extends Application {
 	public static void main(final String[] args) {
@@ -29,6 +23,7 @@ public class View extends Application {
 	static Label countLabel;
 	static Label resetLabel;
 
+	@SuppressWarnings("incomplete-switch")
 	@Override
 	public void start(final Stage stage) throws Exception {
 		stage.setTitle("Coffee Server");
@@ -65,60 +60,46 @@ public class View extends Application {
 		h.setAlignment(Pos.BASELINE_RIGHT);
 		rootPane.add(h, 0, 2);
 		final Scene scene = new Scene(rootPane);
-		scene.heightProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(final ObservableValue<? extends Number> value,
-					final Number oldHeight, final Number newHeight) {
-				View.countLabel.setFont(Font.font(
-						"Meiryo",
-						(rootPane.getHeight() - 80 - usageLabel.getHeight() - resetLabel
-								.getHeight()) * .6));
+		scene.heightProperty()
+				.addListener(
+						(value, oldHeight, newHeight) -> View.countLabel.setFont(Font.font(
+								"Meiryo",
+								(rootPane.getHeight() - 80
+										- usageLabel.getHeight() - View.resetLabel
+										.getHeight()) * .6)));
+		scene.setOnKeyPressed(event -> {
+			switch (event.getCode()) {
+			case ENTER:
+				if (View.countUpHandler != null) {
+					View.countUpHandler.run();
+				}
+				break;
+			case ESCAPE:
+				if (View.resetHandler != null) {
+					View.resetHandler.run();
+				}
+				break;
 			}
 		});
-		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			@SuppressWarnings("incomplete-switch")
-			@Override
-			public void handle(final KeyEvent event) {
-				switch (event.getCode()) {
-				case ENTER:
-					if (View.countUpHandler != null) {
-						View.countUpHandler.run();
-					}
-					break;
-				case ESCAPE:
-					if (View.resetHandler != null) {
-						View.resetHandler.run();
-					}
-					break;
+		scene.setOnMousePressed(event -> {
+			switch (event.getButton()) {
+			case PRIMARY:
+				if (View.countUpHandler != null) {
+					View.countUpHandler.run();
 				}
-			}
-		});
-		scene.setOnMousePressed(new EventHandler<MouseEvent>() {
-			@SuppressWarnings("incomplete-switch")
-			@Override
-			public void handle(final MouseEvent event) {
-				switch (event.getButton()) {
-				case PRIMARY:
-					if (View.countUpHandler != null) {
-						View.countUpHandler.run();
-					}
-					break;
-				case SECONDARY:
-					if (View.resetHandler != null) {
-						View.resetHandler.run();
-					}
-					break;
+				break;
+			case SECONDARY:
+				if (View.resetHandler != null) {
+					View.resetHandler.run();
 				}
+				break;
 			}
 		});
 		stage.setScene(scene);
 		stage.show();
-		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-			@Override
-			public void handle(final WindowEvent event) {
-				if (View.closeHandler != null) {
-					View.closeHandler.run();
-				}
+		stage.setOnCloseRequest(event -> {
+			if (View.closeHandler != null) {
+				View.closeHandler.run();
 			}
 		});
 	}
