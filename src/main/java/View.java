@@ -26,6 +26,8 @@ public class View extends Application {
 	static Runnable countUpHandler;
 	static Runnable resetHandler;
 	static Runnable closeHandler;
+	static Label countLabel;
+	static Label resetLabel;
 
 	@Override
 	public void start(final Stage stage) throws Exception {
@@ -43,37 +45,38 @@ public class View extends Application {
 		final VBox b = new VBox(usageLabel);
 		b.setAlignment(Pos.CENTER);
 		rootPane.add(b, 0, 0);
-		final Label countLabel = new Label("0");
-		countLabel.setFont(Font.font("Meiryo", 80));
-		countLabel.setStyle("-fx-text-fill: White");
-		countLabel.setAlignment(Pos.CENTER);
-		countLabel.setFocusTraversable(false);
-		countLabel.heightProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(final ObservableValue<? extends Number> value,
-					final Number oldHeight, final Number newHeight) {
-				if (oldHeight.doubleValue() > 0) {
-					countLabel.setFont(Font.font(
-							"Meiryo",
-							countLabel.getFont().getSize()
-									* newHeight.doubleValue()
-									/ oldHeight.doubleValue()));
-				}
-			}
-		});
-		final AnchorPane anchorPane = new AnchorPane(countLabel);
-		AnchorPane.setTopAnchor(countLabel, 0d);
-		AnchorPane.setLeftAnchor(countLabel, 0d);
-		AnchorPane.setBottomAnchor(countLabel, 0d);
-		AnchorPane.setRightAnchor(countLabel, 0d);
+		View.countLabel = new Label("0");
+		View.countLabel.setFont(Font.font("Meiryo", 80));
+		View.countLabel.setStyle("-fx-text-fill: White");
+		View.countLabel.setAlignment(Pos.CENTER);
+		View.countLabel.setFocusTraversable(false);
+		View.countLabel.heightProperty().addListener(
+				new ChangeListener<Number>() {
+					@Override
+					public void changed(
+							final ObservableValue<? extends Number> value,
+							final Number oldHeight, final Number newHeight) {
+						if (oldHeight.doubleValue() > 0) {
+							View.countLabel.setFont(Font.font("Meiryo",
+									View.countLabel.getFont().getSize()
+											* newHeight.doubleValue()
+											/ oldHeight.doubleValue()));
+						}
+					}
+				});
+		final AnchorPane anchorPane = new AnchorPane(View.countLabel);
+		AnchorPane.setTopAnchor(View.countLabel, 0d);
+		AnchorPane.setLeftAnchor(View.countLabel, 0d);
+		AnchorPane.setBottomAnchor(View.countLabel, 0d);
+		AnchorPane.setRightAnchor(View.countLabel, 0d);
 		rootPane.add(anchorPane, 0, 1);
 		GridPane.setVgrow(anchorPane, Priority.ALWAYS);
 		GridPane.setHgrow(anchorPane, Priority.ALWAYS);
-		final Label resetLabel = new Label("0");
-		resetLabel.setFont(Font.font("Meiryo", 40));
-		resetLabel.setStyle("-fx-text-fill: White");
-		resetLabel.setFocusTraversable(false);
-		final VBox h = new VBox(resetLabel);
+		View.resetLabel = new Label("0");
+		View.resetLabel.setFont(Font.font("Meiryo", 40));
+		View.resetLabel.setStyle("-fx-text-fill: White");
+		View.resetLabel.setFocusTraversable(false);
+		final VBox h = new VBox(View.resetLabel);
 		h.setAlignment(Pos.BASELINE_RIGHT);
 		rootPane.add(h, 0, 2);
 		final Scene scene = new Scene(rootPane);

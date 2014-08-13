@@ -95,7 +95,7 @@ public class Main {
 			}
 		}, 1, 1, TimeUnit.SECONDS);
 		View.countUpHandler = () -> {
-			count.incrementAndGet();
+			View.countLabel.setText(String.valueOf(count.incrementAndGet()));
 			resetTimeMillis.set(System.currentTimeMillis() + 10_000);
 			Logger.getAnonymousLogger().log(
 					Level.INFO,
@@ -107,6 +107,7 @@ public class Main {
 		};
 		View.resetHandler = () -> {
 			count.set(0);
+			View.countLabel.setText(String.valueOf(count.get()));
 			resetTimeMillis.set(Long.MAX_VALUE);
 			Logger.getAnonymousLogger().info("カウンタをリセットしました。");
 		};
